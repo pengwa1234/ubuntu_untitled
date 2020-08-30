@@ -12,9 +12,6 @@ class Mysql(object):
         self.db = pymysql.connect(host=self.host, user=self.user, password=self.password, database=self.database)
         self.cursor = self.db.cursor()
 
-    # def mycursor(self):
-    #     return self.db.cursor()
-
     def close(self):
         self.cursor.close()
         self.db.close()
@@ -22,9 +19,7 @@ class Mysql(object):
     def excute_one(self, sql, param=()):
         try:
             self.myconnet()
-            self.cursor.execute(sql,param)
-            # self.db.commit()
-            # self.close()
+            self.cursor.execute(sql, param)
         except Exception as e:
             print(e)
             self.db.rollback()
@@ -45,20 +40,30 @@ class Mysql(object):
         finally:
             self.close()
 
-    def get_one(self, sql,param=()):
+    def get_one(self, sql, param=()):
         try:
             self.myconnet()
-            self.cursor.execute(sql,param)
-            result=self.cursor.fetchone()
+            self.cursor.execute(sql, param)
+            result = self.cursor.fetchone()
             return result
         except Exception as e:
             print(e)
 
-    def get_many(self, sql,param=()):
+    def get_many(self, sql, param=()):
         try:
             self.myconnet()
-            self.cursor.execute(sql,param)
-            result=self.cursor.fetchall()
+            self.cursor.execute(sql, param)
+            result = self.cursor.fetchall()
             return result
         except Exception as e:
             print(e)
+
+
+if __name__ == '__main__':
+    mydb = Mysql('localhost', 'root', 'password', 'py3')
+    sql1='insert into students(name) VALUES (%s);'
+    mydb.excute_many(sql1,['小花1','小明1','小兔子1','小猪猪1'])
+    sql = 'select * from students;'
+    res=mydb.get_many(sql)
+    print(res)
+
